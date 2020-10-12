@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    TextView txtDisplay;
+    TextView txtDisplay, txtOperator;
     Button btnCE, btnC, btnBS, btnDivide, btnMultiply, btnMinus;
     Button btnPlus, btnEqual, btnDot, btnPlusMinus;
     Button btnZero, btnOne, btnTwo, btnThree, btnFour;
@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         txtDisplay = findViewById(R.id.txt_display);
+        txtOperator = findViewById(R.id.txt_operator);
 
         btnBS = findViewById(R.id.btn_bs);
         btnC = findViewById(R.id.btn_c);
@@ -145,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     equalHandler();
                     break;
             }
+            txtOperator.setText(currentOperator);
         }
     }
 
