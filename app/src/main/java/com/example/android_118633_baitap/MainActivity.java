@@ -86,88 +86,68 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (clickId == btnBS.getId()) {
             bsHandler();
         } else {
-            calculateHandler(clickId);
-        }
-    }
-
-    private void calculateHandler(int id) {
-        switch (id) {
-            case R.id.btn_zero:
-                if (!isDefault)
-                    currentOperand += "0";
-                if (operatorSelected) {
-                    preOperand = currentOperand;
-                    currentOperand = "0";
-                }
-                operatorSelected = false;
-                break;
-            case R.id.btn_one:
-                numberHandler("1");
-                break;
-            case R.id.btn_two:
-                numberHandler("2");
-                break;
-            case R.id.btn_three:
-                numberHandler("3");
-                break;
-            case R.id.btn_four:
-                numberHandler("4");
-                break;
-            case R.id.btn_five:
-                numberHandler("5");
-                break;
-            case R.id.btn_six:
-                numberHandler("6");
-                break;
-            case R.id.btn_seven:
-                numberHandler("7");
-                break;
-            case R.id.btn_eight:
-                numberHandler("8");
-                break;
-            case R.id.btn_nine:
-                numberHandler("9");
-                break;
-            case R.id.btn_divide:
-                currentOperator = "/";
-                operatorSelected = true;
-                break;
-            case R.id.btn_multiply:
-                currentOperator = "x";
-                operatorSelected = true;
-                break;
-            case R.id.btn_minus:
-                currentOperator = "-";
-                operatorSelected = true;
-                break;
-            case R.id.btn_plus:
-                currentOperator = "+";
-                operatorSelected = true;
-                break;
-            case R.id.btn_equal:
-                if (!currentOperator.equals("")) {
-                    if (currentOperator.equals("/")) {
-                        if (currentOperand.equals("0")) {
-                            result = "ERROR";
-                        } else {
-                            result = String.valueOf(Integer.parseInt(preOperand) / Integer.parseInt(currentOperand));
-                        }
-                    } else if (currentOperator.equals("x")) {
-                        result = String.valueOf(Integer.parseInt(preOperand) * Integer.parseInt(currentOperand));
-                    } else if (currentOperator.equals("-")) {
-                        result = String.valueOf(Integer.parseInt(preOperand) - Integer.parseInt(currentOperand));
-                    } else if (currentOperator.equals("+")) {
-                        result = String.valueOf(Integer.parseInt(preOperand) + Integer.parseInt(currentOperand));
+            switch (clickId) {
+                case R.id.btn_zero:
+                    if (!isDefault)
+                        currentOperand += "0";
+                    if (operatorSelected) {
+                        preOperand = currentOperand;
+                        currentOperand = "0";
                     }
 
-                    txtDisplay.setText(result);
-                }
-                break;
+                    operatorSelected = false;
+                    txtDisplay.setText(currentOperand);
+                    break;
+                case R.id.btn_one:
+                    numberHandler("1");
+                    break;
+                case R.id.btn_two:
+                    numberHandler("2");
+                    break;
+                case R.id.btn_three:
+                    numberHandler("3");
+                    break;
+                case R.id.btn_four:
+                    numberHandler("4");
+                    break;
+                case R.id.btn_five:
+                    numberHandler("5");
+                    break;
+                case R.id.btn_six:
+                    numberHandler("6");
+                    break;
+                case R.id.btn_seven:
+                    numberHandler("7");
+                    break;
+                case R.id.btn_eight:
+                    numberHandler("8");
+                    break;
+                case R.id.btn_nine:
+                    numberHandler("9");
+                    break;
+                case R.id.btn_divide:
+                    currentOperator = "/";
+                    operatorSelected = true;
+                    break;
+                case R.id.btn_multiply:
+                    currentOperator = "x";
+                    operatorSelected = true;
+                    break;
+                case R.id.btn_minus:
+                    currentOperator = "-";
+                    operatorSelected = true;
+                    break;
+                case R.id.btn_plus:
+                    currentOperator = "+";
+                    operatorSelected = true;
+                    break;
+                case R.id.btn_equal:
+                    equalHandler();
+                    break;
+            }
         }
-
-        txtDisplay.setText(currentOperand);
-        if (!currentOperand.equals("0")) isDefault = false;
     }
+
 
     private void ceHandler() {
         isDefault = true;
@@ -203,5 +183,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else
             currentOperand += number;
         operatorSelected = false;
+
+        txtDisplay.setText(currentOperand);
+        if (!currentOperand.equals("0")) isDefault = false;
+    }
+
+    private void equalHandler() {
+        if (!currentOperator.equals("")) {
+            switch (currentOperator) {
+                case "/":
+                    if (currentOperand.equals("0")) {
+                        result = "ERROR";
+                    } else {
+                        result = String.valueOf(Integer.parseInt(preOperand) / Integer.parseInt(currentOperand));
+                    }
+                    break;
+                case "x":
+                    result = String.valueOf(Integer.parseInt(preOperand) * Integer.parseInt(currentOperand));
+                    break;
+                case "-":
+                    result = String.valueOf(Integer.parseInt(preOperand) - Integer.parseInt(currentOperand));
+                    break;
+                case "+":
+                    result = String.valueOf(Integer.parseInt(preOperand) + Integer.parseInt(currentOperand));
+                    break;
+            }
+
+            if (!result.equals("ERROR")) {
+                preOperand = result;
+                currentOperand = result;
+            }
+            txtDisplay.setText(result);
+            isDefault = true;
+            currentOperator = "";
+        }
     }
 }
