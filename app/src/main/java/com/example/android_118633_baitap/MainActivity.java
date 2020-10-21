@@ -11,17 +11,10 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextView txtDisplay, txtOperator;
-    Button btnCE, btnC, btnBS, btnDivide, btnMultiply, btnMinus;
-    Button btnPlus, btnEqual, btnDot, btnPlusMinus;
-    Button btnZero, btnOne, btnTwo, btnThree, btnFour;
-    Button btnFive, btnSix, btnSeven, btnEight, btnNine;
-    Boolean isDefault = true;
-    Boolean operatorSelected = false;
 
-    String currentOperand = "0";
-    String preOperand = "0";
-    String currentOperator = "";
-    String result = "0";
+    int state = 1; // trang thai 1: nhap toan hang 1, 2: nhap toan hang 2;
+    int op1, op2; // toan hang
+    int op = 0; // toan tu: 1 - ADD, 2 - SUB, 3 - MUL, 4 - DIV
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,193 +24,142 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txtDisplay = findViewById(R.id.txt_display);
         txtOperator = findViewById(R.id.txt_operator);
 
-        btnBS = findViewById(R.id.btn_bs);
-        btnC = findViewById(R.id.btn_c);
-        btnCE = findViewById(R.id.btn_ce);
-        btnDivide = findViewById(R.id.btn_divide);
-        btnMultiply = findViewById(R.id.btn_multiply);
-        btnMinus = findViewById(R.id.btn_minus);
-        btnPlus = findViewById(R.id.btn_plus);
-        btnEqual = findViewById(R.id.btn_equal);
-        btnDot = findViewById(R.id.btn_dot);
-        btnPlusMinus = findViewById(R.id.btn_plus_minus);
+        findViewById(R.id.btn_bs).setOnClickListener(this);
+        findViewById(R.id.btn_c).setOnClickListener(this);
+        findViewById(R.id.btn_ce).setOnClickListener(this);
+        findViewById(R.id.btn_divide).setOnClickListener(this);
+        findViewById(R.id.btn_multiply).setOnClickListener(this);
+        findViewById(R.id.btn_minus).setOnClickListener(this);
+        findViewById(R.id.btn_plus).setOnClickListener(this);
+        findViewById(R.id.btn_equal).setOnClickListener(this);
+        findViewById(R.id.btn_dot).setOnClickListener(this);
+        findViewById(R.id.btn_plus_minus).setOnClickListener(this);
 
-        btnZero = findViewById(R.id.btn_zero);
-        btnOne = findViewById(R.id.btn_one);
-        btnTwo = findViewById(R.id.btn_two);
-        btnThree = findViewById(R.id.btn_three);
-        btnFour = findViewById(R.id.btn_four);
-        btnFive = findViewById(R.id.btn_five);
-        btnSix = findViewById(R.id.btn_six);
-        btnSeven = findViewById(R.id.btn_seven);
-        btnEight = findViewById(R.id.btn_eight);
-        btnNine = findViewById(R.id.btn_nine);
-
-        btnBS.setOnClickListener(this);
-        btnC.setOnClickListener(this);
-        btnCE.setOnClickListener(this);
-        btnDivide.setOnClickListener(this);
-        btnMultiply.setOnClickListener(this);
-        btnMinus.setOnClickListener(this);
-        btnPlus.setOnClickListener(this);
-        btnEqual.setOnClickListener(this);
-        btnDot.setOnClickListener(this);
-        btnPlusMinus.setOnClickListener(this);
-
-        btnZero.setOnClickListener(this);
-        btnOne.setOnClickListener(this);
-        btnTwo.setOnClickListener(this);
-        btnThree.setOnClickListener(this);
-        btnFour.setOnClickListener(this);
-        btnFive.setOnClickListener(this);
-        btnSix.setOnClickListener(this);
-        btnSeven.setOnClickListener(this);
-        btnEight.setOnClickListener(this);
-        btnNine.setOnClickListener(this);
+        findViewById(R.id.btn_zero).setOnClickListener(this);
+        findViewById(R.id.btn_one).setOnClickListener(this);
+        findViewById(R.id.btn_two).setOnClickListener(this);
+        findViewById(R.id.btn_three).setOnClickListener(this);
+        findViewById(R.id.btn_four).setOnClickListener(this);
+        findViewById(R.id.btn_five).setOnClickListener(this);
+        findViewById(R.id.btn_six).setOnClickListener(this);
+        findViewById(R.id.btn_seven).setOnClickListener(this);
+        findViewById(R.id.btn_eight).setOnClickListener(this);
+        findViewById(R.id.btn_nine).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        int clickId = v.getId();
+        int id = v.getId();
 
-        if (clickId == btnCE.getId()) {
-            ceHandler();
-        } else if (clickId == btnC.getId()) {
-            cHandler();
-        } else if (clickId == btnBS.getId()) {
-            bsHandler();
+        if (id == R.id.btn_zero)
+            addDigit(0);
+        else if (id == R.id.btn_one)
+            addDigit(1);
+        else if (id == R.id.btn_two)
+            addDigit(2);
+        else if (id == R.id.btn_three)
+            addDigit(3);
+        else if (id == R.id.btn_four)
+            addDigit(4);
+        else if (id == R.id.btn_five)
+            addDigit(5);
+        else if (id == R.id.btn_six)
+            addDigit(6);
+        else if (id == R.id.btn_seven)
+            addDigit(7);
+        else if (id == R.id.btn_eight)
+            addDigit(8);
+        else if (id == R.id.btn_nine)
+            addDigit(9);
+        else if (id == R.id.btn_plus)
+            setOperator(1);
+        else if (id == R.id.btn_minus)
+            setOperator(2);
+        else if (id == R.id.btn_multiply)
+            setOperator(3);
+        else if (id == R.id.btn_divide)
+            setOperator(4);
+        else if (id == R.id.btn_equal)
+            calc();
+        else if (id == R.id.btn_bs)
+            removeDigit();
+        else if (id == R.id.btn_plus_minus)
+            reverseOperand();
+        else if (id == R.id.btn_ce)
+            resetOperand();
+        else if (id == R.id.btn_c)
+            resetOperator();
+    }
+
+    private void resetOperator() {
+        state = 1;
+        op1 = 0;
+        op2 = 0;
+        op = 0;
+        txtDisplay.setText(String.valueOf(op1));
+    }
+
+    private void resetOperand() {
+        if (state == 1) {
+            op1 = 0;
+            txtDisplay.setText(String.valueOf(op1));
         } else {
-            switch (clickId) {
-                case R.id.btn_zero:
-                    if (!isDefault)
-                        currentOperand += "0";
-                    if (operatorSelected) {
-                        preOperand = currentOperand;
-                        currentOperand = "0";
-                    }
-
-                    operatorSelected = false;
-                    txtDisplay.setText(currentOperand);
-                    break;
-                case R.id.btn_one:
-                    numberHandler("1");
-                    break;
-                case R.id.btn_two:
-                    numberHandler("2");
-                    break;
-                case R.id.btn_three:
-                    numberHandler("3");
-                    break;
-                case R.id.btn_four:
-                    numberHandler("4");
-                    break;
-                case R.id.btn_five:
-                    numberHandler("5");
-                    break;
-                case R.id.btn_six:
-                    numberHandler("6");
-                    break;
-                case R.id.btn_seven:
-                    numberHandler("7");
-                    break;
-                case R.id.btn_eight:
-                    numberHandler("8");
-                    break;
-                case R.id.btn_nine:
-                    numberHandler("9");
-                    break;
-                case R.id.btn_divide:
-                    currentOperator = "/";
-                    operatorSelected = true;
-                    break;
-                case R.id.btn_multiply:
-                    currentOperator = "x";
-                    operatorSelected = true;
-                    break;
-                case R.id.btn_minus:
-                    currentOperator = "-";
-                    operatorSelected = true;
-                    break;
-                case R.id.btn_plus:
-                    currentOperator = "+";
-                    operatorSelected = true;
-                    break;
-                case R.id.btn_equal:
-                    equalHandler();
-                    break;
-            }
-            txtOperator.setText(currentOperator);
+            op2 = 0;
+            txtDisplay.setText(String.valueOf(op2));
         }
     }
 
-
-    private void ceHandler() {
-        isDefault = true;
-        currentOperand = "0";
-        txtDisplay.setText(currentOperand);
-    }
-
-    private void cHandler() {
-        isDefault = true;
-        currentOperand = "0";
-        currentOperator = "";
-        txtDisplay.setText(currentOperand);
-    }
-
-    private void bsHandler() {
-        if (currentOperand.length() == 1) {
-            currentOperand = "0";
-            isDefault = true;
+    private void reverseOperand() {
+        if (state == 1) {
+            op1 = -op1;
+            txtDisplay.setText(String.valueOf(op1));
+        } else {
+            op2 = -op2;
+            txtDisplay.setText(String.valueOf(op2));
         }
-        else {
-            currentOperand = currentOperand.substring(0, currentOperand.length() - 1);
+    }
+
+    private void removeDigit() {
+        if (state == 1) {
+            op1 = op1 / 10;
+            txtDisplay.setText(String.valueOf(op1));
+        } else {
+            op2 = op2 / 10;
+            txtDisplay.setText(String.valueOf(op2));
+        }
+    }
+
+    private void calc() {
+        int res = 0;
+        if (op == 1) {
+            res = op1 + op2;
+        } else if (op == 2) {
+            res = op1 - op2;
+        } else if (op == 3) {
+            res = op1 * op2;
+        } else if (op == 4) {
+            res = op1 / op2;
         }
 
-        txtDisplay.setText(currentOperand);
+        txtDisplay.setText(String.valueOf(res));
+        state = 1;
+        op1 = 0;
+        op2 = 0;
     }
 
-    private void numberHandler (String number) {
-        if (isDefault)
-            currentOperand = number;
-        else if (operatorSelected) {
-            preOperand = currentOperand;
-            currentOperand = number;
-        } else
-            currentOperand += number;
-        operatorSelected = false;
-
-        txtDisplay.setText(currentOperand);
-        if (!currentOperand.equals("0")) isDefault = false;
+    private void setOperator(int type) {
+        state = 2;
+        op = type;
+        txtDisplay.setText(String.valueOf(op2));
     }
 
-    private void equalHandler() {
-        if (!currentOperator.equals("")) {
-            switch (currentOperator) {
-                case "/":
-                    if (currentOperand.equals("0")) {
-                        result = "ERROR";
-                    } else {
-                        result = String.valueOf(Integer.parseInt(preOperand) / Integer.parseInt(currentOperand));
-                    }
-                    break;
-                case "x":
-                    result = String.valueOf(Integer.parseInt(preOperand) * Integer.parseInt(currentOperand));
-                    break;
-                case "-":
-                    result = String.valueOf(Integer.parseInt(preOperand) - Integer.parseInt(currentOperand));
-                    break;
-                case "+":
-                    result = String.valueOf(Integer.parseInt(preOperand) + Integer.parseInt(currentOperand));
-                    break;
-            }
-
-            if (!result.equals("ERROR")) {
-                preOperand = result;
-                currentOperand = result;
-            }
-            txtDisplay.setText(result);
-            isDefault = true;
-            currentOperator = "";
+    private void addDigit(int digit) {
+        if (state == 1) {
+            op1 = op1 * 10 + digit;
+            txtDisplay.setText(String.valueOf(op1));
+        } else {
+            op2 = op2 * 10 + digit;
+            txtDisplay.setText(String.valueOf(op2));
         }
     }
 }
